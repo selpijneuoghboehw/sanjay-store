@@ -13,10 +13,8 @@ const CAT_ICONS = {
   "Cooking Oils":        "🫒",
 };
 
-// Categories that use weight (kg/g) instead of piece count
 const WEIGHT_CATEGORIES = ["Pulses"];
 
-// Price in inventory is per KG
 function calcAmount(item, weightG) {
   return (item.price / 1000) * weightG;
 }
@@ -27,9 +25,7 @@ function WeightControl({ item, cartItem, onAdd, onUpdateWeight }) {
 
   const displayGrams = unit === "kg" ? grams / 1000 : grams;
 
-  function handleUnitToggle(u) {
-    setUnit(u);
-  }
+  function handleUnitToggle(u) { setUnit(u); }
 
   function handleChange(val) {
     const n = parseFloat(val) || 0;
@@ -96,6 +92,11 @@ export default function CustomerView() {
     setTimeout(() => setToast(""), 2500);
   }
 
+  // Auto-open cart drawer on mobile when item added
+  function openCartOnMobile() {
+    if (window.innerWidth < 768) setCartOpen(true);
+  }
+
   const categories = [...new Set(inventory.map((i) => i.category))];
 
   const displayed = inventory.filter((item) => {
@@ -112,7 +113,7 @@ export default function CustomerView() {
     setCart((prev) => {
       const existing = prev.find((c) => c.item_name === item.item_name);
       if (existing) {
-        if (isWeight) return prev; // handled by WeightControl
+        if (isWeight) return prev;
         return prev.map((c) => c.item_name === item.item_name
           ? { ...c, qty: c.qty + 1, amount: item.price * (c.qty + 1) }
           : c
@@ -126,7 +127,10 @@ export default function CustomerView() {
         amount:  isWeight ? calcAmount(item, 500) : item.price,
       }];
     });
-    if (!isWeight) showToast(`✓ ${item.item_name} added`);
+    if (!isWeight) {
+      showToast(`✓ ${item.item_name} added`);
+      openCartOnMobile();
+    }
   }
 
   function addWeightItem(item, weightG, unit) {
@@ -142,6 +146,7 @@ export default function CustomerView() {
       return [...prev, { ...item, qty: null, weightG, unit, amount }];
     });
     showToast(`✓ ${item.item_name} added`);
+    openCartOnMobile();
   }
 
   function updateWeightItem(itemName, weightG, unit) {
@@ -208,13 +213,13 @@ export default function CustomerView() {
         </div>
 
         <div className="search-bar">
-            <span className="search-icon">🔍</span>
-            <input
-              placeholder="Search items…"
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setSelectedCat(null); }}
-            />
-          </div>
+          <span className="search-icon">🔍</span>
+          <input
+            placeholder="Search items…"
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setSelectedCat(null); }}
+          />
+        </div>
 
         {!search && (
           <div className="cat-row">
@@ -231,7 +236,6 @@ export default function CustomerView() {
           </div>
         )}
 
-        {/* Category cards when no category selected and no search */}
         {!selectedCat && !search ? (
           <div className="cat-cards-grid">
             {categories.map((cat) => {
@@ -279,22 +283,32 @@ export default function CustomerView() {
             })}
           </div>
         )}
+
+        {/* Inline mini cart summary on mobile when cart has items */}
+        {cartCount > 0 && (
+          <div className="mobile-cart-summary" onClick={() => setCartOpen(true)}>
+            <span>🧾 {cartCount} item{cartCount > 1 ? "s" : ""} in cart</span>
+            <span className="mobile-cart-total">₹{total.toFixed(0)} — View Bill →</span>
+          </div>
+        )}
       </div>
 
-      {/* Desktop Cart */}
+      {/* Desktop Cart Sidebar */}
       {cartContent}
 
       {/* Mobile FAB */}
-      <button className="cart-fab" onClick={() => setCartOpen(true)}>
-        🧾 Bill {cartCount > 0 && `(${cartCount})`} — ₹{total.toFixed(0)}
-      </button>
+      {cartCount > 0 && (
+        <button className="cart-fab" onClick={() => setCartOpen(true)}>
+          🧾 {cartCount} item{cartCount > 1 ? "s" : ""} — ₹{total.toFixed(0)} · Place Order →
+        </button>
+      )}
 
       {/* Mobile Drawer */}
       {cartOpen && (
         <div className="cart-drawer-overlay open" onClick={(e) => { if (e.target === e.currentTarget) setCartOpen(false); }}>
           <div className="cart-drawer">
             <div className="drawer-handle" />
-            <button className="drawer-close" onClick={() => setCartOpen(false)}>✕</button>
+            <button className="drawer-close" onClick={() => setCartOpen(false)}>✕ Close</button>
             {cartContent}
           </div>
         </div>
