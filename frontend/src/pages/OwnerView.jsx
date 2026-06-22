@@ -3,6 +3,8 @@ import { api } from "../api";
 
 const CAT_OPTIONS = ["Pulses", "Cleaning", "Grocery", "Snacks", "Other"];
 
+const WEIGHT_CATEGORIES = ["Pulses"];
+
 export default function OwnerView() {
   const [tab, setTab] = useState("orders");
   const [orders, setOrders] = useState([]);
@@ -27,7 +29,7 @@ export default function OwnerView() {
     setTimeout(() => setToast(""), 2200);
   }
 
-  // ── Orders ──────────────────────────────────────────────────────────────────
+  // ── Orders ──────────────────────────────────────────────
   async function handleDeleteOrder(idx) {
     if (!confirm("Delete this order?")) return;
     await api.deleteOrder(idx);
@@ -42,7 +44,7 @@ export default function OwnerView() {
     showToast("All orders cleared");
   }
 
-  // ── Inventory ────────────────────────────────────────────────────────────────
+  // ── Inventory ───────────────────────────────────────────
   async function handleAddItem() {
     const { item_name, category, price } = newItem;
     if (!item_name.trim() || !price) return showToast("Fill all fields");
@@ -76,11 +78,54 @@ export default function OwnerView() {
     showToast("Item deleted");
   }
 
-  // Stats
+  // ── Parse order items ────────────────────────────────
+  // New orders have cart array, old orders have items string
+  function parseOrderItems(order) {
+    // New format: cart is an array of objects
+    if (order.cart && Array.isArray(order.cart)) {
+      return order.cart.map((c) => {
+        const isWeight = WEIGHT_CATEGORIES.includes(c.category);
+        if (isWeight) {
+          const weightDisplay = c.unit === "kg"
+            ? `${(c.weightG / 1000).toFixed(2)} kg`
+            : `${c.weightG} g`;
+          return {
+            name: c.item_name,
+            qty: weightDisplay,
+            rate: `₹${c.price}/kg`,
+            amount: c.amount,
+          };
+        }
+        return {
+          name: c.item_name,
+          qty: c.qty,
+          rate: c.price,
+          amount: c.amount,
+        };
+      });
+    }
+    // Old format: items string like "2x Rice (@₹60.0), 1x Sugar (@₹45.0)"
+    if (order.items) {
+      return (order.items || "").split(",").map((seg) => {
+        seg = seg.trim();
+        const match = seg.match(/^(\d+)x\s+(.+?)\s+\(@₹([\d.]+)\)$/);
+        if (match) return { name: match[2], qty: parseInt(match[1]), rate: parseFloat(match[3]), amount: parseInt(match[1]) * parseFloat(match[3]) };
+        return { name: seg, qty: "", rate: "", amount: "" };
+      });
+    }
+    return [];
+  }
+
+  // ── Stats ────────────────────────────────────────────
   const totalRevenue = orders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
   const todayStr = new Date().toISOString().slice(0, 10);
   const todayOrders = orders.filter((o) => (o.time || "").startsWith(todayStr));
   const todayRevenue = todayOrders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
+
+  const cashOrders = orders.filter((o) => o.paymentMode === "cash");
+  const onlineOrders = orders.filter((o) => o.paymentMode === "online");
+  const cashRevenue = cashOrders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
+  const onlineRevenue = onlineOrders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
 
   const filteredInventory = inventory.filter((i) =>
     i.item_name.toLowerCase().includes(search.toLowerCase())
@@ -112,6 +157,14 @@ export default function OwnerView() {
           <div className="stat-val">{inventory.length}</div>
           <div className="stat-lbl">Items in Stock</div>
         </div>
+        <div className="stat-card stat-card-cash">
+          <div className="stat-val">₹{cashRevenue.toFixed(0)}</div>
+          <div className="stat-lbl">💵 Cash</div>
+        </div>
+        <div className="stat-card stat-card-online">
+          <div className="stat-val">₹{onlineRevenue.toFixed(0)}</div>
+          <div className="stat-lbl">📱 Online</div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -139,13 +192,9 @@ export default function OwnerView() {
             <div className="orders-list">
               {[...orders].reverse().map((o, ri) => {
                 const realIdx = orders.length - 1 - ri;
-                // Parse "2x Rice (@₹60.0), 1x Sugar (@₹45.0)" into rows
-                const itemRows = (o.items || "").split(",").map((seg) => {
-                  seg = seg.trim();
-                  const match = seg.match(/^(\d+)x\s+(.+?)\s+\(@₹([\d.]+)\)$/);
-                  if (match) return { qty: match[1], name: match[2], price: match[3] };
-                  return { qty: "", name: seg, price: "" };
-                });
+                const itemRows = parseOrderItems(o);
+                const orderTotal = parseFloat(o.total || 0);
+
                 return (
                   <div key={realIdx} className="order-card">
                     {/* Order header */}
@@ -156,34 +205,50 @@ export default function OwnerView() {
                         <span className="order-time">{o.time}</span>
                       </div>
                       <div className="order-card-right">
-                        <span className="order-total">₹{parseFloat(o.total).toFixed(0)}</span>
+                        {/* Payment mode badge */}
+                        <span className={`payment-badge ${o.paymentMode === "cash" ? "payment-cash" : o.paymentMode === "online" ? "payment-online" : "payment-unknown"}`}>
+                          {o.paymentMode === "cash" ? "💵 Cash" : o.paymentMode === "online" ? "📱 Online" : "❓ N/A"}
+                        </span>
+                        <span className="order-total">₹{orderTotal.toFixed(0)}</span>
                         <button className="icon-btn red" onClick={() => handleDeleteOrder(realIdx)} title="Delete">🗑</button>
                       </div>
                     </div>
+
                     {/* Items table */}
                     <table className="order-items-table">
                       <thead>
                         <tr>
                           <th>Item</th>
                           <th>Qty</th>
-                          <th>Rate</th>
+                          <th>Unit Price</th>
                           <th>Amount</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {itemRows.map((item, ii) => (
-                          <tr key={ii}>
-                            <td>{item.name}</td>
-                            <td className="center">{item.qty}</td>
-                            <td className="center">₹{item.price}</td>
-                            <td className="center accent">
-                              {item.qty && item.price
-                                ? `₹${(parseInt(item.qty) * parseFloat(item.price)).toFixed(0)}`
-                                : "—"}
-                            </td>
-                          </tr>
-                        ))}
+                        {itemRows.map((item, ii) => {
+                          const isWeightItem = typeof item.qty === "string";
+                          return (
+                            <tr key={ii}>
+                              <td>{item.name}</td>
+                              <td className="center">
+                                {isWeightItem ? item.qty : item.qty}
+                              </td>
+                              <td className="center">
+                                {isWeightItem ? item.rate : `₹${item.rate}`}
+                              </td>
+                              <td className="accent">
+                                {item.amount !== "" ? `₹${Number(item.amount).toFixed(0)}` : "—"}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
+                      <tfoot>
+                        <tr className="order-table-total-row">
+                          <td colSpan="3" className="order-table-total-label">Total</td>
+                          <td className="accent order-table-total-val">₹{orderTotal.toFixed(0)}</td>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                 );
