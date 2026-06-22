@@ -92,11 +92,6 @@ export default function CustomerView() {
     setTimeout(() => setToast(""), 2500);
   }
 
-  // Auto-open cart drawer on mobile when item added
-  function openCartOnMobile() {
-    if (window.innerWidth < 768) setCartOpen(true);
-  }
-
   const categories = [...new Set(inventory.map((i) => i.category))];
 
   const displayed = inventory.filter((item) => {
@@ -106,7 +101,7 @@ export default function CustomerView() {
   });
 
   const total     = cart.reduce((s, c) => s + c.amount, 0);
-  const cartCount = cart.length;
+  const cartCount = cart.reduce((s, c) => s + (c.qty || 1), 0);
 
   function addToCart(item) {
     const isWeight = WEIGHT_CATEGORIES.includes(item.category);
@@ -128,8 +123,7 @@ export default function CustomerView() {
       }];
     });
     if (!isWeight) {
-      showToast(`✓ ${item.item_name} added`);
-      openCartOnMobile();
+      showToast(`✓ ${item.item_name} added to cart`);
     }
   }
 
@@ -145,8 +139,7 @@ export default function CustomerView() {
       }
       return [...prev, { ...item, qty: null, weightG, unit, amount }];
     });
-    showToast(`✓ ${item.item_name} added`);
-    openCartOnMobile();
+    showToast(`✓ ${item.item_name} added to cart`);
   }
 
   function updateWeightItem(itemName, weightG, unit) {
@@ -190,24 +183,27 @@ export default function CustomerView() {
   return (
     <div className="customer-layout">
       <div className="inventory-panel">
+        {/* Customer Name */}
         <div className="name-bar">
           <input
             className="cust-input"
-            placeholder="👤 Customer name (required)"
+            placeholder="👤 Customer name (required for billing)"
             value={customer}
             onChange={(e) => setCustomer(e.target.value)}
           />
         </div>
 
+        {/* Search */}
         <div className="search-bar">
           <span className="search-icon">🔍</span>
           <input
-            placeholder="Search items…"
+            placeholder="Search for items…"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setSelectedCat(null); }}
           />
         </div>
 
+        {/* Category chips */}
         {!search && (
           <div className="cat-row">
             <button className={`cat-chip ${!selectedCat ? "active" : ""}`} onClick={() => setSelectedCat(null)}>All</button>
@@ -223,6 +219,7 @@ export default function CustomerView() {
           </div>
         )}
 
+        {/* Category Cards or Items Grid */}
         {!selectedCat && !search ? (
           <div className="cat-cards-grid">
             {categories.map((cat) => {
@@ -247,7 +244,7 @@ export default function CustomerView() {
                   <div className="item-emoji">{CAT_ICONS[item.category] || "📦"}</div>
                   <div className="item-name">{item.item_name}</div>
                   <div className="item-cat">{item.category}</div>
-                  <div className="item-price">₹{item.price}{isWeight ? "/kg" : ""}</div>
+                  <div className="item-price">{item.price}{isWeight ? "/kg" : ""}</div>
                   {item.barcode && <div className="item-barcode">🔖 {item.barcode}</div>}
                   {isWeight ? (
                     <WeightControl
@@ -271,10 +268,10 @@ export default function CustomerView() {
           </div>
         )}
 
-        {/* Inline mini cart summary on mobile — sticky at bottom of inventory panel */}
+        {/* Inline cart summary on mobile */}
         {cartCount > 0 && (
           <div className="mobile-cart-summary" onClick={() => setCartOpen(true)}>
-            <span>🧾 {cartCount} item{cartCount > 1 ? "s" : ""} in cart</span>
+            <span>🛒 {cartCount} item{cartCount > 1 ? "s" : ""} in cart</span>
             <span className="mobile-cart-total">₹{total.toFixed(0)} · View Bill →</span>
           </div>
         )}
@@ -294,12 +291,15 @@ export default function CustomerView() {
         />
       </div>
 
-      {/* Mobile FAB — always visible on mobile when cart has items */}
+      {/* Mobile Bottom Bar — Amazon style */}
       {cartCount > 0 && (
         <button className="cart-fab" onClick={() => setCartOpen(true)}>
-          🧾 <span>{cartCount} item{cartCount > 1 ? "s" : ""}</span>
-          <span>₹{total.toFixed(0)}</span>
-          <span className="cart-fab-action">Place Order →</span>
+          <div className="cart-fab-left">
+            🛒 {cartCount} item{cartCount > 1 ? "s" : ""} · ₹{total.toFixed(0)}
+          </div>
+          <div className="cart-fab-right">
+            PLACE ORDER →
+          </div>
         </button>
       )}
 
