@@ -3,7 +3,7 @@ import { api } from "../api";
 
 const CAT_OPTIONS = ["Pulses", "Cleaning", "Grocery", "Snacks", "Other"];
 
-const WEIGHT_CATEGORIES = ["Pulses"];
+const WEIGHT_CATEGORIES = ["Pulses", "Whole Spices"];
 
 export default function OwnerView() {
   const [tab, setTab] = useState("orders");
@@ -159,11 +159,13 @@ export default function OwnerView() {
         </div>
         <div className="stat-card stat-card-cash">
           <div className="stat-val">₹{cashRevenue.toFixed(0)}</div>
-          <div className="stat-lbl">💵 Cash</div>
+          <div className="stat-lbl">💵 Cash Received</div>
+          <div className="stat-sub">{cashOrders.length} order{cashOrders.length !== 1 ? "s" : ""}</div>
         </div>
         <div className="stat-card stat-card-online">
           <div className="stat-val">₹{onlineRevenue.toFixed(0)}</div>
-          <div className="stat-lbl">📱 Online</div>
+          <div className="stat-lbl">📱 Online Received</div>
+          <div className="stat-sub">{onlineOrders.length} order{onlineOrders.length !== 1 ? "s" : ""}</div>
         </div>
       </div>
 
