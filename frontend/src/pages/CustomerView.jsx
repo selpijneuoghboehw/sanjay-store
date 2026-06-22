@@ -13,7 +13,7 @@ const CAT_ICONS = {
   "Cooking Oils":         "🫒",
 };
 
-const WEIGHT_CATEGORIES = ["Pulses"];
+const WEIGHT_CATEGORIES = ["Pulses", "Whole Spices"];
 
 function calcAmount(item, weightG) {
   return (item.price / 1000) * weightG;
@@ -72,6 +72,47 @@ function WeightControl({ item, cartItem, onAdd, onUpdateWeight }) {
   );
 }
 
+function PieceControl({ item, cartItem, onAdd, onUpdateQty }) {
+  const [qty, setQty] = useState(1);
+
+  function handleAdd() {
+    onAdd(item, qty);
+    setQty(1);
+  }
+
+  function handleUpdate(newQty) {
+    if (newQty <= 0) {
+      onUpdateQty(item.item_name, 0);
+    } else {
+      onUpdateQty(item.item_name, newQty);
+    }
+  }
+
+  const amount = item.price * qty;
+
+  if (cartItem) {
+    return (
+      <div className="qty-controls">
+        <button onClick={() => handleUpdate(cartItem.qty - 1)}>−</button>
+        <span>{cartItem.qty}</span>
+        <button onClick={() => handleUpdate(cartItem.qty + 1)}>+</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="piece-control">
+      <div className="piece-qty-row">
+        <button className="piece-qty-btn" onClick={() => setQty(Math.max(1, qty - 1))}>−</button>
+        <span className="piece-qty-val">{qty}</span>
+        <button className="piece-qty-btn" onClick={() => setQty(qty + 1)}>+</button>
+      </div>
+      {qty > 1 && <div className="weight-amount">₹{amount.toFixed(0)}</div>}
+      <button className="add-btn" onClick={handleAdd}>+ Add{qty > 1 ? ` (${qty})` : ""}</button>
+    </div>
+  );
+}
+
 export default function CustomerView() {
   const [inventory, setInventory]     = useState([]);
   const [cart, setCart]               = useState([]);
@@ -104,28 +145,26 @@ export default function CustomerView() {
   const total     = cart.reduce((s, c) => s + c.amount, 0);
   const cartCount = cart.reduce((s, c) => s + (c.qty || 1), 0);
 
-  function addToCart(item) {
+  function addToCart(item, qty) {
     const isWeight = WEIGHT_CATEGORIES.includes(item.category);
     setCart((prev) => {
       const existing = prev.find((c) => c.item_name === item.item_name);
       if (existing) {
         if (isWeight) return prev;
         return prev.map((c) => c.item_name === item.item_name
-          ? { ...c, qty: c.qty + 1, amount: item.price * (c.qty + 1) }
+          ? { ...c, qty: c.qty + qty, amount: item.price * (c.qty + qty) }
           : c
         );
       }
       return [...prev, {
         ...item,
-        qty:     isWeight ? null : 1,
+        qty:     isWeight ? null : qty,
         weightG: isWeight ? 500 : null,
         unit:    isWeight ? "g" : null,
-        amount:  isWeight ? calcAmount(item, 500) : item.price,
+        amount:  isWeight ? calcAmount(item, 500) : item.price * qty,
       }];
     });
-    if (!isWeight) {
-      showToast(`✓ ${item.item_name} added to cart`);
-    }
+    showToast(`✓ ${item.item_name} added to cart`);
   }
 
   function addWeightItem(item, weightG, unit) {
@@ -252,14 +291,13 @@ export default function CustomerView() {
                       onAdd={addWeightItem}
                       onUpdateWeight={updateWeightItem}
                     />
-                  ) : inCart ? (
-                    <div className="qty-controls">
-                      <button onClick={() => updateQty(item.item_name, inCart.qty - 1)}>−</button>
-                      <span>{inCart.qty}</span>
-                      <button onClick={() => updateQty(item.item_name, inCart.qty + 1)}>+</button>
-                    </div>
                   ) : (
-                    <button className="add-btn" onClick={() => addToCart(item)}>+ Add</button>
+                    <PieceControl
+                      item={item}
+                      cartItem={inCart}
+                      onAdd={addToCart}
+                      onUpdateQty={updateQty}
+                    />
                   )}
                 </div>
               );
