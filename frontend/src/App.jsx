@@ -5,7 +5,7 @@ import PinLock from "./components/PinLock";
 import "./index.css";
 
 export default function App() {
-  const [view, setView] = useState("customer"); // "customer" | "owner"
+  const [view, setView] = useState("customer");
   const [ownerAuth, setOwnerAuth] = useState(false);
   const [showPin, setShowPin] = useState(false);
 
@@ -30,7 +30,7 @@ export default function App() {
 
   return (
     <div className="app-root">
-      {/* Header */}
+      {/* Header — Amazon/Flipkart style */}
       <header className="store-header">
         <div className="header-left">
           <div className="store-logo">🏪</div>
