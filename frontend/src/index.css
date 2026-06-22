@@ -244,6 +244,36 @@ body {
 }
 .clear-cart-btn:hover { background: #FFF5F5; }
 
+/* ── Payment Mode Selector ──────────────────────────── */
+.payment-mode-section { margin-bottom: 0.75rem; }
+.payment-mode-label {
+  font-weight: 600; font-size: 0.82rem; color: var(--text-2);
+  margin-bottom: 0.4rem;
+}
+.payment-mode-options {
+  display: flex; gap: 0.5rem;
+}
+.payment-mode-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+  background: white; border: 2px solid var(--border);
+  border-radius: 8px; padding: 0.6rem 0.5rem;
+  font-family: var(--font); font-size: 0.85rem; font-weight: 600;
+  color: var(--text-2); cursor: pointer;
+}
+.payment-mode-btn:hover { border-color: var(--blue); color: var(--blue); }
+.payment-mode-btn.active {
+  border-color: var(--green); background: #E8F5E9; color: var(--green);
+  font-weight: 700;
+}
+.payment-mode-hint {
+  font-size: 0.75rem; color: var(--red); margin-top: 0.3rem;
+}
+
+.checkout-btn.disabled {
+  opacity: 0.5; cursor: not-allowed;
+}
+.checkout-btn.disabled:hover { background: var(--green); }
+
 .order-success { text-align: center; padding: 2rem 0; }
 .success-icon { font-size: 2.5rem; margin-bottom: 0.4rem; }
 .order-success p { color: var(--green); font-weight: 700; font-size: 1rem; }
@@ -631,6 +661,7 @@ body {
   }
   .cart-drawer-content { max-height: calc(92vh - 5rem); }
   .cart-items { max-height: none; }
+  .payment-mode-btn { padding: 0.55rem 0.4rem; font-size: 0.82rem; }
 }
 
 @media (max-width: 360px) {
