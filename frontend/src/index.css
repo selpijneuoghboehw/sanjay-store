@@ -747,6 +747,26 @@ body {
 .weight-unit-label { color: var(--text-3); font-size: 0.75rem; font-weight: 600; }
 .weight-amount { color: var(--text); font-size: 0.78rem; font-weight: 700; text-align: center; }
 
+/* ── Piece Quantity Control ──────────────────────────── */
+.piece-control {
+  display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.25rem;
+}
+.piece-qty-row {
+  display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+}
+.piece-qty-btn {
+  width: 28px; height: 28px; background: white; border: 1px solid var(--border);
+  color: var(--text); font-size: 1rem; font-weight: 700; border-radius: 6px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.piece-qty-btn:hover { background: var(--elevated); border-color: var(--blue); }
+.piece-qty-val {
+  font-weight: 700; font-size: 0.95rem; color: var(--text);
+  min-width: 28px; text-align: center;
+  background: var(--elevated); border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+}
+
 /* ── Cart row weight ──────────────────────────────── */
 .cart-item-info { flex: 1; min-width: 0; }
 .cart-item-meta { font-size: 0.72rem; color: var(--text-3); margin-top: 2px; }
