@@ -1,4 +1,4 @@
-const WEIGHT_CATEGORIES = ["Pulses"];
+const WEIGHT_CATEGORIES = ["Pulses", "Whole Spices"];
 
 function formatWeight(weightG, unit) {
   if (unit === "kg") return `${(weightG / 1000).toFixed(2)} kg`;
