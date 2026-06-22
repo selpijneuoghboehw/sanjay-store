@@ -82,6 +82,7 @@ export default function CustomerView() {
   const [toast, setToast]             = useState("");
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [cartOpen, setCartOpen]       = useState(false);
+  const [paymentMode, setPaymentMode] = useState("");
 
   useEffect(() => {
     api.getInventory().then(setInventory).finally(() => setLoading(false));
@@ -168,12 +169,14 @@ export default function CustomerView() {
   async function handleCheckout() {
     if (cart.length === 0) return;
     if (!customer.trim()) { showToast("⚠️ Please enter customer name"); return; }
+    if (!paymentMode) { showToast("⚠️ Please select payment mode"); return; }
     try {
-      await api.placeOrder({ customer, cart, total });
+      await api.placeOrder({ customer, cart, total, paymentMode });
       setOrderPlaced(true);
       setCart([]);
       setCustomer("");
       setCartOpen(false);
+      setPaymentMode("");
       setTimeout(() => setOrderPlaced(false), 3000);
     } catch { showToast("❌ Error placing order"); }
   }
@@ -183,7 +186,6 @@ export default function CustomerView() {
   return (
     <div className="customer-layout">
       <div className="inventory-panel">
-        {/* Customer Name */}
         <div className="name-bar">
           <input
             className="cust-input"
@@ -193,7 +195,6 @@ export default function CustomerView() {
           />
         </div>
 
-        {/* Search */}
         <div className="search-bar">
           <span className="search-icon">🔍</span>
           <input
@@ -203,7 +204,6 @@ export default function CustomerView() {
           />
         </div>
 
-        {/* Category chips */}
         {!search && (
           <div className="cat-row">
             <button className={`cat-chip ${!selectedCat ? "active" : ""}`} onClick={() => setSelectedCat(null)}>All</button>
@@ -219,7 +219,6 @@ export default function CustomerView() {
           </div>
         )}
 
-        {/* Category Cards or Items Grid */}
         {!selectedCat && !search ? (
           <div className="cat-cards-grid">
             {categories.map((cat) => {
@@ -268,7 +267,6 @@ export default function CustomerView() {
           </div>
         )}
 
-        {/* Inline cart summary on mobile */}
         {cartCount > 0 && (
           <div className="mobile-cart-summary" onClick={() => setCartOpen(true)}>
             <span>🛒 {cartCount} item{cartCount > 1 ? "s" : ""} in cart</span>
@@ -288,10 +286,12 @@ export default function CustomerView() {
           onCheckout={handleCheckout}
           onClear={() => setCart([])}
           orderPlaced={orderPlaced}
+          paymentMode={paymentMode}
+          onPaymentModeChange={setPaymentMode}
         />
       </div>
 
-      {/* Mobile Bottom Bar — Amazon style */}
+      {/* Mobile Bottom Bar */}
       {cartCount > 0 && (
         <button className="cart-fab" onClick={() => setCartOpen(true)}>
           <div className="cart-fab-left">
@@ -319,6 +319,8 @@ export default function CustomerView() {
                 onCheckout={handleCheckout}
                 onClear={() => { setCart([]); setCartOpen(false); }}
                 orderPlaced={orderPlaced}
+                paymentMode={paymentMode}
+                onPaymentModeChange={setPaymentMode}
               />
             </div>
           </div>
