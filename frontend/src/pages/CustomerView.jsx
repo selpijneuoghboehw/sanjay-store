@@ -3,14 +3,14 @@ import { api } from "../api";
 import Cart from "../components/Cart";
 
 const CAT_ICONS = {
-  Pulses:                "🌾",
-  Groceries:             "🛒",
-  "Personal Care":       "🧴",
-  "Household & Cleaning":"🧹",
-  "Whole Spices":        "🫙",
-  "Powdered Spices":     "🌶️",
-  Confectionery:         "🍪",
-  "Cooking Oils":        "🫒",
+  Pulses:                 "🌾",
+  Groceries:              "🛒",
+  "Personal Care":        "🧴",
+  "Household & Cleaning": "🧹",
+  "Whole Spices":         "🫙",
+  "Powdered Spices":      "🌶️",
+  Confectionery:          "🍪",
+  "Cooking Oils":         "🫒",
 };
 
 const WEIGHT_CATEGORIES = ["Pulses"];
@@ -187,19 +187,6 @@ export default function CustomerView() {
 
   if (loading) return <div className="loading">Loading inventory…</div>;
 
-  const cartContent = (
-    <Cart
-      cart={cart}
-      total={total}
-      customer={customer}
-      onUpdateQty={updateQty}
-      onUpdateWeight={updateWeightItem}
-      onCheckout={handleCheckout}
-      onClear={() => setCart([])}
-      orderPlaced={orderPlaced}
-    />
-  );
-
   return (
     <div className="customer-layout">
       <div className="inventory-panel">
@@ -284,32 +271,56 @@ export default function CustomerView() {
           </div>
         )}
 
-        {/* Inline mini cart summary on mobile when cart has items */}
+        {/* Inline mini cart summary on mobile — sticky at bottom of inventory panel */}
         {cartCount > 0 && (
           <div className="mobile-cart-summary" onClick={() => setCartOpen(true)}>
             <span>🧾 {cartCount} item{cartCount > 1 ? "s" : ""} in cart</span>
-            <span className="mobile-cart-total">₹{total.toFixed(0)} — View Bill →</span>
+            <span className="mobile-cart-total">₹{total.toFixed(0)} · View Bill →</span>
           </div>
         )}
       </div>
 
       {/* Desktop Cart Sidebar */}
-      {cartContent}
+      <div className="cart-panel">
+        <Cart
+          cart={cart}
+          total={total}
+          customer={customer}
+          onUpdateQty={updateQty}
+          onUpdateWeight={updateWeightItem}
+          onCheckout={handleCheckout}
+          onClear={() => setCart([])}
+          orderPlaced={orderPlaced}
+        />
+      </div>
 
-      {/* Mobile FAB */}
+      {/* Mobile FAB — always visible on mobile when cart has items */}
       {cartCount > 0 && (
         <button className="cart-fab" onClick={() => setCartOpen(true)}>
-          🧾 {cartCount} item{cartCount > 1 ? "s" : ""} — ₹{total.toFixed(0)} · Place Order →
+          🧾 <span>{cartCount} item{cartCount > 1 ? "s" : ""}</span>
+          <span>₹{total.toFixed(0)}</span>
+          <span className="cart-fab-action">Place Order →</span>
         </button>
       )}
 
       {/* Mobile Drawer */}
       {cartOpen && (
         <div className="cart-drawer-overlay open" onClick={(e) => { if (e.target === e.currentTarget) setCartOpen(false); }}>
-          <div className="cart-drawer">
+          <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="drawer-handle" />
-            <button className="drawer-close" onClick={() => setCartOpen(false)}>✕ Close</button>
-            {cartContent}
+            <button className="drawer-close" onClick={() => setCartOpen(false)}>✕</button>
+            <div className="cart-drawer-content">
+              <Cart
+                cart={cart}
+                total={total}
+                customer={customer}
+                onUpdateQty={updateQty}
+                onUpdateWeight={updateWeightItem}
+                onCheckout={handleCheckout}
+                onClear={() => { setCart([]); setCartOpen(false); }}
+                orderPlaced={orderPlaced}
+              />
+            </div>
           </div>
         </div>
       )}
