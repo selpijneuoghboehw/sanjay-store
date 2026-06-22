@@ -5,7 +5,7 @@ function formatWeight(weightG, unit) {
   return `${weightG} g`;
 }
 
-export default function Cart({ cart, total, customer, onUpdateQty, onUpdateWeight, onCheckout, onClear, orderPlaced }) {
+export default function Cart({ cart, total, customer, onUpdateQty, onUpdateWeight, onCheckout, onClear, orderPlaced, paymentMode, onPaymentModeChange }) {
   return (
     <div className="cart-panel">
       <div className="cart-header">
@@ -67,7 +67,35 @@ export default function Cart({ cart, total, customer, onUpdateQty, onUpdateWeigh
             <span className="total-amount">₹{total.toFixed(0)}</span>
           </div>
 
-          <button className="checkout-btn" onClick={onCheckout}>✓ Confirm Order</button>
+          {/* Payment Mode Selector */}
+          <div className="payment-mode-section">
+            <div className="payment-mode-label">Payment Mode *</div>
+            <div className="payment-mode-options">
+              <button
+                className={`payment-mode-btn ${paymentMode === "cash" ? "active" : ""}`}
+                onClick={() => onPaymentModeChange("cash")}
+              >
+                💵 Cash
+              </button>
+              <button
+                className={`payment-mode-btn ${paymentMode === "online" ? "active" : ""}`}
+                onClick={() => onPaymentModeChange("online")}
+              >
+                📱 Online (UPI)
+              </button>
+            </div>
+            {!paymentMode && (
+              <div className="payment-mode-hint">Select payment mode to continue</div>
+            )}
+          </div>
+
+          <button
+            className={`checkout-btn ${!paymentMode ? "disabled" : ""}`}
+            onClick={paymentMode ? onCheckout : undefined}
+            disabled={!paymentMode}
+          >
+            ✓ Confirm Order
+          </button>
           <button className="clear-cart-btn" onClick={onClear}>Clear Cart</button>
         </>
       )}
