@@ -1,0 +1,548 @@
+[
+  {
+    "item_name": "Chana Dal",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Maah Dal",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Green Moongi",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Yellow Moongi",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "White Chana",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Black Chana",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Rajma",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Red Masoor",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Black Masoor",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Urad Dal",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Arhar Dal",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Rice",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Wheat Flour (Atta)",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Suji",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Sugar",
+    "category": "Pulses",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Salt",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Butter",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Honey",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Milk (1L)",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Milk (500ml)",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Milk (200ml)",
+    "category": "Groceries",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Shampoo",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Conditioner",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Toothpaste",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Toothbrush",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Face Wash",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Moisturizer / Lotion",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Talcum Powder",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Deodorant",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Razors",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Shaving Cream / Gel",
+    "category": "Personal Care",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Detergent Powder",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Dishwash Bar",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Phenyl (Black)",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Harpic",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Brooms & Mops",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Scrubbers",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Cockroach Hit (Red)",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Naphthalene Balls",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Room Freshener",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Mosquito Hit (Black)",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Phenyl (White)",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Lizol",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Washing Soap",
+    "category": "Household & Cleaning",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Green Elaichi",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Dalchini (Cinnamon)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Tej Patta",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Jeera (Cumin Seeds)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Mace (Javitri)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Nutmeg (Jaiphal)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Dry Red Chili",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Kasturi Methi",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Kalonji Seeds",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Til (Sesame Seeds)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Khus Khus (Poppy Seeds)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Anardana",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Dhaniya (Coriander)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Ajwain (Carom)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Souf",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Kali Mirch",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Mix Masala",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Rai (Mustard Seeds)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Cloves (Laung)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Methi Dana (Fenugreek Seeds)",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Imli",
+    "category": "Whole Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Turmeric Powder (Haldi)",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Red Chili Powder",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Coriander Powder (Dhaniya)",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Cumin Powder (Jeera)",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Garam Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Tikki Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Amchur Powder",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Chaat Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Kashmiri Red Chili Powder",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Chicken Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Mutton Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Rajma Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Asafoetida (Hing)",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Dry Ginger Powder (Sonth)",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Chole Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Pav Bhaji Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Sambar Powder",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Kitchen King Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Paneer Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Dal Makhani Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Meat Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Shahi Paneer Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Sabzi Masala",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Pickle Masala (Achar Masala)",
+    "category": "Powdered Spices",
+    "price": 100,
+    "barcode": ""
+  },
+  {
+    "item_name": "Biscuits",
+    "category": "Confectionery",
+    "price": 10,
+    "barcode": ""
+  },
+  {
+    "item_name": "Fortune",
+    "category": "Cooking Oils",
+    "price": 100,
+    "barcode": ""
+  }
+]
