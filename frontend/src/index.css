@@ -745,6 +745,29 @@ body {
 .weight-input::-webkit-inner-spin-button,
 .weight-input::-webkit-outer-spin-button { opacity: 1; }
 .weight-unit-label { color: var(--text-3); font-size: 0.75rem; font-weight: 600; }
+/* ── Category Input Group ────────────────────────────── */
+.category-input-group {
+  display: flex; gap: 0.3rem; flex: 1; min-width: 100px;
+}
+.category-input-group select,
+.category-input-group input {
+  flex: 1; min-width: 0;
+}
+.cat-confirm-btn {
+  background: var(--green); border: none; color: white;
+  font-weight: 700; font-size: 0.85rem;
+  width: 34px; height: 34px; border-radius: 6px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cat-cancel-btn {
+  background: transparent; border: 1px solid var(--red); color: var(--red);
+  font-weight: 700; font-size: 0.85rem;
+  width: 34px; height: 34px; border-radius: 6px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
 .weight-amount { color: var(--text); font-size: 0.78rem; font-weight: 700; text-align: center; }
 
 /* ── Piece Quantity Control ──────────────────────────── */
