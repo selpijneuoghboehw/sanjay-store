@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../api";
 
-const CAT_OPTIONS = ["Pulses", "Cleaning", "Grocery", "Snacks", "Other"];
-
 const WEIGHT_CATEGORIES = ["Pulses", "Whole Spices"];
 
 export default function OwnerView() {
@@ -14,9 +12,15 @@ export default function OwnerView() {
   const [loading, setLoading] = useState(true);
 
   // New item form
-  const [newItem, setNewItem] = useState({ item_name: "", category: "Grocery", price: "" });
+  const [newItem, setNewItem] = useState({ item_name: "", category: "", price: "" });
   // Edit item inline
   const [editingItem, setEditingItem] = useState(null);
+  // Custom category
+  const [showNewCategory, setShowNewCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+
+  // Get unique categories from existing inventory
+  const existingCategories = [...new Set(inventory.map((i) => i.category))].sort();
 
   useEffect(() => {
     Promise.all([api.getOrders(), api.getInventory()])
@@ -27,6 +31,30 @@ export default function OwnerView() {
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(""), 2200);
+  }
+
+  // ── Category handling ─────────────────────────────────
+  function handleCategorySelect(cat) {
+    if (cat === "__new__") {
+      setShowNewCategory(true);
+      setNewItem({ ...newItem, category: "" });
+    } else {
+      setShowNewCategory(false);
+      setNewCategoryName("");
+      setNewItem({ ...newItem, category: cat });
+    }
+  }
+
+  function handleNewCategoryConfirm() {
+    const trimmed = newCategoryName.trim();
+    if (!trimmed) {
+      showToast("⚠️ Enter a category name");
+      return;
+    }
+    setNewItem({ ...newItem, category: trimmed });
+    setShowNewCategory(false);
+    setNewCategoryName("");
+    showToast(`✓ Category "${trimmed}" ready`);
   }
 
   // ── Orders ──────────────────────────────────────────────
@@ -47,12 +75,13 @@ export default function OwnerView() {
   // ── Inventory ───────────────────────────────────────────
   async function handleAddItem() {
     const { item_name, category, price } = newItem;
-    if (!item_name.trim() || !price) return showToast("Fill all fields");
+    if (!item_name.trim() || !category.trim() || !price) return showToast("⚠️ Fill all fields");
     try {
-      await api.addItem({ item_name: item_name.trim(), category, price: parseFloat(price) });
-      const updated = await api.getInventory();
+      await api.addItem({ item_name: item_name.trim(), category: category.trim(), price: parseFloat(price) });
+      const updated = await api.refreshInventory();
       setInventory(updated);
-      setNewItem({ item_name: "", category: "Grocery", price: "" });
+      setNewItem({ item_name: "", category: "", price: "" });
+      setShowNewCategory(false);
       showToast(`✓ ${item_name} added`);
     } catch (e) {
       showToast(`❌ ${e.message}`);
@@ -62,7 +91,7 @@ export default function OwnerView() {
   async function handleSaveEdit(original) {
     try {
       await api.updateItem(original, editingItem);
-      const updated = await api.getInventory();
+      const updated = await api.refreshInventory();
       setInventory(updated);
       setEditingItem(null);
       showToast("✓ Item updated");
@@ -74,14 +103,13 @@ export default function OwnerView() {
   async function handleDeleteItem(name) {
     if (!confirm(`Delete "${name}"?`)) return;
     await api.deleteItem(name);
-    setInventory((prev) => prev.filter((i) => i.item_name !== name));
+    const updated = await api.refreshInventory();
+    setInventory(updated);
     showToast("Item deleted");
   }
 
   // ── Parse order items ────────────────────────────────
-  // New orders have cart array, old orders have items string
   function parseOrderItems(order) {
-    // New format: cart is an array of objects
     if (order.cart && Array.isArray(order.cart)) {
       return order.cart.map((c) => {
         const isWeight = WEIGHT_CATEGORIES.includes(c.category);
@@ -104,7 +132,6 @@ export default function OwnerView() {
         };
       });
     }
-    // Old format: items string like "2x Rice (@₹60.0), 1x Sugar (@₹45.0)"
     if (order.items) {
       return (order.items || "").split(",").map((seg) => {
         seg = seg.trim();
@@ -199,7 +226,6 @@ export default function OwnerView() {
 
                 return (
                   <div key={realIdx} className="order-card">
-                    {/* Order header */}
                     <div className="order-card-header">
                       <div className="order-meta">
                         <span className="order-num">#{realIdx + 1}</span>
@@ -207,7 +233,6 @@ export default function OwnerView() {
                         <span className="order-time">{o.time}</span>
                       </div>
                       <div className="order-card-right">
-                        {/* Payment mode badge */}
                         <span className={`payment-badge ${o.paymentMode === "cash" ? "payment-cash" : o.paymentMode === "online" ? "payment-online" : "payment-unknown"}`}>
                           {o.paymentMode === "cash" ? "💵 Cash" : o.paymentMode === "online" ? "📱 Online" : "❓ N/A"}
                         </span>
@@ -216,7 +241,6 @@ export default function OwnerView() {
                       </div>
                     </div>
 
-                    {/* Items table */}
                     <table className="order-items-table">
                       <thead>
                         <tr>
@@ -232,15 +256,9 @@ export default function OwnerView() {
                           return (
                             <tr key={ii}>
                               <td>{item.name}</td>
-                              <td className="center">
-                                {isWeightItem ? item.qty : item.qty}
-                              </td>
-                              <td className="center">
-                                {isWeightItem ? item.rate : `₹${item.rate}`}
-                              </td>
-                              <td className="accent">
-                                {item.amount !== "" ? `₹${Number(item.amount).toFixed(0)}` : "—"}
-                              </td>
+                              <td className="center">{isWeightItem ? item.qty : item.qty}</td>
+                              <td className="center">{isWeightItem ? item.rate : `₹${item.rate}`}</td>
+                              <td className="accent">{item.amount !== "" ? `₹${Number(item.amount).toFixed(0)}` : "—"}</td>
                             </tr>
                           );
                         })}
@@ -272,12 +290,33 @@ export default function OwnerView() {
                 value={newItem.item_name}
                 onChange={(e) => setNewItem({ ...newItem, item_name: e.target.value })}
               />
-              <select
-                value={newItem.category}
-                onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
-              >
-                {CAT_OPTIONS.map((c) => <option key={c}>{c}</option>)}
-              </select>
+
+              {/* Category: Select existing OR create new */}
+              {!showNewCategory ? (
+                <div className="category-input-group">
+                  <select
+                    value={newItem.category}
+                    onChange={(e) => handleCategorySelect(e.target.value)}
+                  >
+                    <option value="">— Select Category —</option>
+                    {existingCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                    <option value="__new__">✚ New Category</option>
+                  </select>
+                </div>
+              ) : (
+                <div className="category-input-group">
+                  <input
+                    placeholder="Type new category name…"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleNewCategoryConfirm(); }}
+                    autoFocus
+                  />
+                  <button className="cat-confirm-btn" onClick={handleNewCategoryConfirm}>✓</button>
+                  <button className="cat-cancel-btn" onClick={() => { setShowNewCategory(false); setNewCategoryName(""); }}>✕</button>
+                </div>
+              )}
+
               <input
                 type="number"
                 placeholder="Price ₹"
@@ -310,12 +349,11 @@ export default function OwnerView() {
                         value={editingItem.item_name}
                         onChange={(e) => setEditingItem({ ...editingItem, item_name: e.target.value })}
                       />
-                      <select
+                      <input
+                        placeholder="Category"
                         value={editingItem.category}
                         onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
-                      >
-                        {CAT_OPTIONS.map((c) => <option key={c}>{c}</option>)}
-                      </select>
+                      />
                       <input
                         type="number"
                         value={editingItem.price}
